@@ -1,0 +1,21 @@
+.places__cards {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media screen and (min-width: 768px) {
+    .places__cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 17px;
+        row-gap: 3px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .places__cards {
+        grid-template-columns: repeat(3, 1fr);
+
+    }
+}

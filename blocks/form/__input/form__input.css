@@ -1,0 +1,23 @@
+.form__input{
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0, 0.2);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    line-height: 17px;
+    margin-bottom: 19px;
+}
+.form__input:nth-child(2){
+    margin-bottom: 42px;
+}
+
+@media screen and (min-width: 1024px) {
+    .form__input{
+        margin-bottom: 20px;
+    }
+
+    .form__input:nth-child(2){
+        margin-bottom: 44px;
+    }
+}
+

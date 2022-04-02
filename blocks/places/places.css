@@ -1,0 +1,10 @@
+.places {
+    margin-bottom: 48px;
+}
+
+@media screen and (min-width: 1024px) {
+    .places {
+        margin-bottom: 46px;
+    }
+
+}
