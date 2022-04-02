@@ -1,7 +1,6 @@
 (function(){
     const popup = document.querySelector('.popup');
     
-    
     function closePopup(evt){
         /*
         Если evt.target содержит класс popup
