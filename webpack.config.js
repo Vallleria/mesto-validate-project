@@ -1,7 +1,7 @@
 const path = require('path'); // модуль встроен в Node.js
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // плагины устанавливаем отдельно при помощи npm install
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin'); 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 module.exports = {
@@ -38,24 +38,26 @@ module.exports = {
                 generator: {
                     filename: 'images/[hash][ext][query]' // картинки будут копироваться в папку dist/images
                 }
-              },
-              {
+            },
+            {
                 // применять это правило только к CSS-файлам
                 test: /\.css$/,
                 // при обработке этих файлов нужно использовать
                 // MiniCssExtractPlugin.loader и css-loader
-                use: [MiniCssExtractPlugin.loader, 
-                    {
-                  loader: 'css-loader'
-                }]
-            }
+                use: [MiniCssExtractPlugin.loader, {
+                  loader: 'css-loader',
+                  options: { importLoaders: 1 }
+                },
+                  // Добавьте postcss-loader
+                'postcss-loader']
+              }, 
         ]
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/index.html' // путь к файлу index.html
-          }),
-          new CleanWebpackPlugin(), // использовали плагин
-          new MiniCssExtractPlugin() // подключение плагина для объединения файлов
-    ] 
+        }),
+        new CleanWebpackPlugin(), // использовали плагин
+        new MiniCssExtractPlugin() // подключение плагина для объединения файлов
+    ]
 };
