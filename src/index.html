@@ -5,18 +5,17 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Mesto</title>
-        <link rel="stylesheet" href="pages/index.css" />
     </head>
 
     <body>
         <div class="page">
             <header class="header">
-                <img class="header__logo" src="./image/logo.svg" alt="лого" />
+                <img class="header__logo" src="<%=require('./image/logo.svg')%>" alt="лого" />
             </header>
             <main class="content section-center">
                 <section class="profile">
                     <div class="profile__info">
-                        <img class="profile__image" src="./image/avatar.jpeg" alt="аватарка" />
+                        <img class="profile__image" src="<%=require('./image/avatar.jpeg')%>" alt="аватарка" />
                         <div class="profile__wrapper">
                             <h1 class="profile__title">Жак-Ив Кусто</h1>
                             <button class="profile__edit-btn" type="button"></button>
@@ -63,7 +62,7 @@
         </div>
         <template class="card-template">
             <li class="card">
-                <img class="card__trash" src="./image/trash.svg" alt="корзина удалить" />
+                <img class="card__trash" src="<%=require('./image/trash.svg')%>" alt="корзина удалить" />
                 <img class="card__image" src="#" alt="" />
                 <div class="card__card-footer">
                     <h2 class="card__title"></h2>
@@ -75,15 +74,10 @@
         <div class="popup show-image-popup">
             <div class="show-image-popup__container">
                 <button type="button" class="show-image-popup__close popup__close" aria-label="закрытие модального окна"></button>
-                <img class="show-image-popup__img" src="./image/places3.jpg" alt="" />
+                <img class="show-image-popup__img" src="<%=require('./image/places3.jpg')%>" alt="" />
                 <p class="show-image-popup__title"></p>
             </div>
         </div>
-        <script src="./scripts/utils.js"></script>
-        <script src="./scripts/modal.js"></script>
-        <script src="./scripts/card.js"></script>
-        <script src="./scripts/validation.js"></script>
-        <script src="./scripts/overlay.js"></script>
-        <script src="./scripts/index.js"></script>
+       
     </body>
 </html>

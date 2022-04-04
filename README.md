@@ -26,3 +26,10 @@
 
 * Ссылка на макет в GitHub
 (https://vallleria.github.io/mesto/index.html)
+
+const path = require('path'); // require - ф-ция встроенная в node.js для подкл.модулей
+
+const distPath = path.resolve(__dirname, "dist")
+
+console.log("distPath: ", distPath)
+
