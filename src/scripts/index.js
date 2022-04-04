@@ -1,13 +1,13 @@
-(function() {
+import { addCardsToPage } from './card.js'
+import { fillProfilePopupForm, togglePopup, profilePopup } from './modal.js'
 
-    const profileEditBtn = document.querySelector('.profile__edit-btn');
+const profileEditBtn = document.querySelector('.profile__edit-btn');
 
-    profileEditBtn.addEventListener('click', function () {
-        ModalModule.fillProfilePopupForm();
-        ModalModule.togglePopup(ModalModule.profilePopup);
-    });
+profileEditBtn.addEventListener('click', function () {
+    fillProfilePopupForm();
+    togglePopup(profilePopup);
+});
 
-   
-    CardsModule.addCardsToPage();
 
-})();
+addCardsToPage();
+
