@@ -1,19 +1,40 @@
+import {togglePopup} from './modal'
 
-const popup = document.querySelector('.popup');
+const popups = document.querySelectorAll('.popup');
 
-function closePopup(evt) {
-    /*
-    Если evt.target содержит класс popup
-    то закроем попап
-    */
+// function closePopup(popup) {
+//     /*
+//     Если popup содержит класс popup
+//     то закроем попап
+//     */
+    
+//     if (evt.target.classList.contains("popup")) {
+//         popup.classList.remove('popup_opened');
+//     }
 
-    if (evt.target.classList.contains("popup")) {
-        evt.target.classList.remove('popup_opened');
+// }
+
+
+document.addEventListener('keydown', function(event){
+    if(event.code === 'Escape') {
+        const popup = Array.from(popups).find(function(popup){
+            return popup.classList.contains('popup_opened')
+        });
+        if(popup){
+            togglePopup(popup);
+        }
+       
     }
+});
 
-}
+popups.forEach(function(popup){
+   popup.addEventListener('click', function(evt){
+    if (evt.target.classList.contains("popup")){
+        togglePopup(popup)
+    }
+   })
+});
 
-popup.addEventListener('click', closePopup);
 
 
 

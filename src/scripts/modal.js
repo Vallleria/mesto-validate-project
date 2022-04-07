@@ -1,4 +1,5 @@
 import { createCard } from './card.js'
+import { checkEmptyInputs, resetFormValidation } from './validation.js';
 
 // Profile popup
 const profilePopup = document.querySelector('.profile-popup');
@@ -36,7 +37,14 @@ function updateProfile(evt) {
 }
 
 function togglePopup(popup) {
-    popup.classList.toggle("popup_opened");
+    const form = popup.querySelector('.form');
+    if (form && popup.classList.contains('popup_opened')) { // если есть форма в попапе && если закрываем popup
+        resetFormValidation(form);
+    }
+    if (form && !popup.classList.contains('popup_opened')) {
+        checkEmptyInputs(form, false);
+    }
+    popup.classList.toggle('popup_opened');
 }
 
 function addImage(evt) {
@@ -63,8 +71,10 @@ profilePopupCloseBtn.addEventListener('click', function () {
 
 profilePopupForm.addEventListener('submit', updateProfile);
 
-profileAddBtn.addEventListener('click', function () {
-    togglePopup(imagePopup)
+profileAddBtn.addEventListener('click', function (evt) {
+    togglePopup(imagePopup);
+    // const form = imagePopup.querySelector('.form');
+    // checkEmptyInputs(form, false);
 });
 
 imagePopupCloseBtn.addEventListener('click', function () {
@@ -93,3 +103,5 @@ export {
     updateProfile,
     togglePopup
 }
+
+
