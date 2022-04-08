@@ -47,7 +47,13 @@ const checkEmptyInputs = function(formElement, showErrors=true) {
     }
 }
 
-const resetFormValidation = function (formElement) {
+function checkPopupEmptyInputs(popup) {
+    const form = popup.querySelector('.form');
+    checkEmptyInputs(form, false);
+}
+
+const resetPopupFormValidation = function (popup) {
+    const formElement = popup.querySelector('.form');
     const inputs = formElement.querySelectorAll('.form__input');
     inputs.forEach(function(input) {
         const errorSpan = formElement.querySelector(`.${input.id}-error`);
@@ -91,5 +97,6 @@ Array.from(popupForms).forEach(function (formElement) {
 
 export {
     checkEmptyInputs,
-    resetFormValidation
+    checkPopupEmptyInputs,
+    resetPopupFormValidation
 }

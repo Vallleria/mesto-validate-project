@@ -1,11 +1,13 @@
 import { addCardsToPage } from './card.js'
-import { fillProfilePopupForm, togglePopup, profilePopup } from './modal.js'
+import { fillProfilePopupForm, openPopup, profilePopup } from './modal.js'
+import { checkPopupEmptyInputs } from './validation.js'
 
 const profileEditBtn = document.querySelector('.profile__edit-btn');
 
 profileEditBtn.addEventListener('click', function () {
     fillProfilePopupForm();
-    togglePopup(profilePopup);
+    openPopup(profilePopup);
+    checkPopupEmptyInputs(profilePopup);
 });
 
 

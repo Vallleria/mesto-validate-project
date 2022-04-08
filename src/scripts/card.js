@@ -1,4 +1,5 @@
-import { showImagePopup, showImagePopupImg, togglePopup } from './modal.js'
+import { showImagePopup, showImagePopupImg, openPopup } from './modal.js'
+import { checkPopupEmptyInputs } from './validation.js'
 
 // Cards
 const placesCards = document.querySelector('.places__cards');
@@ -58,7 +59,8 @@ function getCard(link, name) {
 
         showImagePopup.querySelector('.show-image-popup__title').textContent = name;
         // показать show-image-popup
-        togglePopup(showImagePopup);
+        openPopup(showImagePopup);
+        checkPopupEmptyInputs(showImagePopup);
     })
     return card;
 }

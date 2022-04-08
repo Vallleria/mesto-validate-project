@@ -1,5 +1,5 @@
 import { createCard } from './card.js'
-import { checkEmptyInputs, resetFormValidation } from './validation.js';
+import { resetPopupFormValidation, checkPopupEmptyInputs } from './validation.js'
 
 // Profile popup
 const profilePopup = document.querySelector('.profile-popup');
@@ -23,7 +23,6 @@ const showImagePopupCloseBtn = document.querySelector('.show-image-popup__close'
 const showImagePopupImg = showImagePopup.querySelector('.show-image-popup__img');
 
 
-
 function fillProfilePopupForm() {
     formInputName.value = profileTitle.textContent;
     formInputProfession.value = profileSubtitle.textContent;
@@ -33,19 +32,33 @@ function updateProfile(evt) {
     evt.preventDefault();
     profileTitle.textContent = formInputName.value;
     profileSubtitle.textContent = formInputProfession.value;
-    togglePopup(profilePopup);
+    openPopup(profilePopup);
+    checkPopupEmptyInputs(profilePopup);
 }
 
-function togglePopup(popup) {
-    const form = popup.querySelector('.form');
-    if (form && popup.classList.contains('popup_opened')) { // если есть форма в попапе && если закрываем popup
-        resetFormValidation(form);
-    }
-    if (form && !popup.classList.contains('popup_opened')) {
-        checkEmptyInputs(form, false);
-    }
-    popup.classList.toggle('popup_opened');
+
+function closeByEscape(evt) {
+    if(evt.code === 'Escape') {
+        const openedPopup = document.querySelector('.popup_opened');
+        if(openedPopup){
+            resetPopupFormValidation(openedPopup);
+            closePopup(openedPopup);
+        }
+    } 
 }
+
+function openPopup(popup){
+    popup.classList.add('popup_opened');
+    document.addEventListener('keydown', closeByEscape);
+};
+
+
+function closePopup(popup){
+    popup.classList.remove('popup_opened');
+    document.removeEventListener('keydown', closeByEscape); 
+};
+
+
 
 function addImage(evt) {
     evt.preventDefault();
@@ -61,29 +74,32 @@ function addImage(evt) {
     // создаем карточку с данными из полей
     createCard(link, name);
     // скрыть image-popup
-    togglePopup(imagePopup);
+    resetPopupFormValidation(imagePopup);
+    closePopup(imagePopup);
 
 }
 
 profilePopupCloseBtn.addEventListener('click', function () {
-    togglePopup(profilePopup)
+    resetPopupFormValidation(profilePopup);
+    closePopup(profilePopup);
 });
 
 profilePopupForm.addEventListener('submit', updateProfile);
 
 profileAddBtn.addEventListener('click', function (evt) {
-    togglePopup(imagePopup);
-    // const form = imagePopup.querySelector('.form');
-    // checkEmptyInputs(form, false);
+    openPopup(imagePopup);
+    checkPopupEmptyInputs(imagePopup);
 });
 
 imagePopupCloseBtn.addEventListener('click', function () {
-    togglePopup(imagePopup)
+    resetPopupFormValidation(imagePopup);
+    closePopup(imagePopup)
 });
 imagePopupForm.addEventListener('submit', addImage)
 
 showImagePopupCloseBtn.addEventListener('click', function () {
-    togglePopup(showImagePopup)
+    resetPopupFormValidation(showImagePopup);
+    closePopup(showImagePopup)
 });
 
 
@@ -101,7 +117,8 @@ export {
     fillProfilePopupForm,
     addImage,
     updateProfile,
-    togglePopup
+    openPopup,
+    closePopup,
 }
 
 
