@@ -11,6 +11,7 @@ const formInputProfession = profilePopup.querySelector('.form__input[name="profe
 const profilePopupForm = profilePopup.querySelector('.profile-popup__form');
 const profileAddBtn = document.querySelector('.profile__add-btn');
 
+
 // Image popup
 const imagePopup = document.querySelector('.image-popup');
 const imagePopupCloseBtn = imagePopup.querySelector('.image-popup__close');
@@ -19,7 +20,6 @@ const formInputTitle = imagePopup.querySelector('.form__input[name="title"]');
 const imagePopupForm = imagePopup.querySelector('.image-popup__form');
 const showImagePopup = document.querySelector('.show-image-popup');
 const showImagePopupCloseBtn = document.querySelector('.show-image-popup__close');
-
 const showImagePopupImg = showImagePopup.querySelector('.show-image-popup__img');
 
 
@@ -32,8 +32,8 @@ function updateProfile(evt) {
     evt.preventDefault();
     profileTitle.textContent = formInputName.value;
     profileSubtitle.textContent = formInputProfession.value;
-    openPopup(profilePopup);
-    checkPopupEmptyInputs(profilePopup);
+    resetPopupFormValidation(imagePopup);
+    closePopup(profilePopup);
 }
 
 
@@ -41,7 +41,6 @@ function closeByEscape(evt) {
     if(evt.code === 'Escape') {
         const openedPopup = document.querySelector('.popup_opened');
         if(openedPopup){
-            resetPopupFormValidation(openedPopup);
             closePopup(openedPopup);
         }
     } 
@@ -98,7 +97,6 @@ imagePopupCloseBtn.addEventListener('click', function () {
 imagePopupForm.addEventListener('submit', addImage)
 
 showImagePopupCloseBtn.addEventListener('click', function () {
-    resetPopupFormValidation(showImagePopup);
     closePopup(showImagePopup)
 });
 

@@ -60,7 +60,6 @@ function getCard(link, name) {
         showImagePopup.querySelector('.show-image-popup__title').textContent = name;
         // показать show-image-popup
         openPopup(showImagePopup);
-        checkPopupEmptyInputs(showImagePopup);
     })
     return card;
 }
