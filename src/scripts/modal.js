@@ -1,5 +1,7 @@
 import { createCard } from './card.js'
 import { resetPopupFormValidation, checkPopupEmptyInputs } from './validation.js'
+import { patchProfileAvatar, patchProfileInfo, postNewCard } from './api.js'
+import { updatePageProfile } from './profile.js'
 
 // Profile popup
 const profilePopup = document.querySelector('.profile-popup');
@@ -10,6 +12,22 @@ const formInputName = profilePopup.querySelector('.form__input[name="name"]');
 const formInputProfession = profilePopup.querySelector('.form__input[name="profession"]');
 const profilePopupForm = profilePopup.querySelector('.profile-popup__form');
 const profileAddBtn = document.querySelector('.profile__add-btn');
+
+/* TODO:
+0. При наведение курсором на аватрку показать иконку редактирования
+1. Обработать клик по аватарке на странице и показать модальное окно avatarPopup
+2. Проверка введенных данных в поле url
+3. При клике на кнопку Сохранить выполнить проверку и отправить данные на сервер, закрыть модалку
+
+*/
+
+// AvatarPopup
+const avatarImage = document.querySelector('.profile__image');
+const avatarPopup = document.querySelector('.avatar-popup');
+const avatarPopupCloseBtn = avatarPopup.querySelector('.avatar-popup__close');
+const avatarPopupForm = avatarPopup.querySelector('.avatar-popup__form');
+const avatarInputUrl = avatarPopup.querySelector('.form__input[name="url"]');
+
 
 
 // Image popup
@@ -28,12 +46,47 @@ function fillProfilePopupForm() {
     formInputProfession.value = profileSubtitle.textContent;
 }
 
+function updateSaveButtonState(form, text, isDisabled) {
+    const saveButton = form.querySelector('.button_type_primary');
+    saveButton.textContent = text;
+    saveButton.setAttribute('disabled', isDisabled)
+}
+
+function startSaveButtonLoading(form) {
+    updateSaveButtonState(form, 'Сохранить...', true);
+}
+
+function stopSaveButtonLoading(form) {
+    updateSaveButtonState(form, 'Сохранить', false);
+}
+
 function updateProfile(evt) {
     evt.preventDefault();
-    profileTitle.textContent = formInputName.value;
-    profileSubtitle.textContent = formInputProfession.value;
-    resetPopupFormValidation(imagePopup);
-    closePopup(profilePopup);
+    // поменять текст на кнопке Сохранение...
+    // заблокировать кнопку, пока идет отпрвка
+    //startSaveButtonLoading(...);
+    const form = evt.target;  // profilePopupForm
+    
+    startSaveButtonLoading(form);
+    patchProfileInfo(formInputName.value, formInputProfession.value)
+    .then(function(profileData){
+        resetPopupFormValidation(imagePopup);
+        closePopup(profilePopup);
+        updatePageProfile(profileData);
+        // поменять текст на кнопке обратно на Сохранить
+        // разблокировать кнопку
+        stopSaveButtonLoading(form);
+    })
+    .catch(function(error){
+       console.log(error)
+       stopSaveButtonLoading(form);
+    })
+    // отправить новые данные из полей ввода на сервер
+    // если все ок, обновить на странице
+    // profileTitle.textContent = formInputName.value;
+    // profileSubtitle.textContent = formInputProfession.value;
+
+   
 }
 
 
@@ -61,22 +114,47 @@ function closePopup(popup){
 
 function addImage(evt) {
     evt.preventDefault();
+    const form = evt.target;
+    startSaveButtonLoading(form);
+
 
     // берем из полей ввода имя и ссылку
     const link = formInputImage.value;
     const name = formInputTitle.value;
 
+    // 1. получить ссылки и имя из формы
+    // 2. отправить ссылку и имя на сервер
+    // 3. если все хорошо, то 
+    //    - очистить поля ввода
+    //    - создать карточку с данными
+    //    - сбросить валидация и закрыть окошко
+    postNewCard(name, link)
+    .then(function(card){
+        formInputImage.value = '';
+        formInputTitle.value = '';
+        createCard(card.link, card.name, card._id);
+        resetPopupFormValidation(imagePopup);
+        closePopup(imagePopup);
+        startSaveButtonLoading(form);
+    }) .catch(function(error){
+        stopSaveButtonLoading(form)
+         console.log(error)
+    })
+    
+
+
+
     // очистить поля ввода
-    formInputImage.value = '';
-    formInputTitle.value = '';
+    // 
 
     // создаем карточку с данными из полей
-    createCard(link, name);
+    // 
     // скрыть image-popup
-    resetPopupFormValidation(imagePopup);
-    closePopup(imagePopup);
+    // 
 
 }
+
+
 
 profilePopupCloseBtn.addEventListener('click', function () {
     resetPopupFormValidation(profilePopup);
@@ -94,10 +172,44 @@ imagePopupCloseBtn.addEventListener('click', function () {
     resetPopupFormValidation(imagePopup);
     closePopup(imagePopup)
 });
+
 imagePopupForm.addEventListener('submit', addImage)
 
 showImagePopupCloseBtn.addEventListener('click', function () {
     closePopup(showImagePopup)
+});
+
+// ------- Обработка событий avatar popup ---------
+
+// обработка отправки формы с url аватара
+function updateAvatar(evt){
+    evt.preventDefault();
+    const form = evt.target; 
+    startSaveButtonLoading(form);
+    // отправить данные и если все ок, то очистка и закрываем окно
+    patchProfileAvatar(avatarInputUrl.value)
+    .then(function(profileData){
+        resetPopupFormValidation(avatarPopup);
+        closePopup(avatarPopup);
+        updatePageProfile (profileData)
+        stopSaveButtonLoading(form);
+    })
+    .catch(function(error){
+       stopSaveButtonLoading(form);
+       console.log(error)
+    })
+};
+
+avatarPopupForm.addEventListener('submit', updateAvatar);
+
+avatarPopupCloseBtn.addEventListener('click', function () {
+    resetPopupFormValidation(avatarPopup);
+    closePopup(avatarPopup)
+});
+
+avatarImage.addEventListener('click', function (evt) {
+    openPopup(avatarPopup);
+    checkPopupEmptyInputs(avatarPopup);
 });
 
 

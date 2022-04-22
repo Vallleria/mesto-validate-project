@@ -54,7 +54,10 @@
 @import url(../blocks/popup/_opened/popup_opened.css);
 
 
-
+/* Avatar Popup */
+@import url(../blocks/avatar-popup/avatar-popup.css);
+@import url(../blocks/avatar-popup/__container/avatar-popup__container.css);
+@import url(../blocks/avatar-popup/__button/avatar-popup__button.css);
 
 
 @import url(../blocks/show-image-popup/show-image-popup.css);

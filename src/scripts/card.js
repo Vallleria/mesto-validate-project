@@ -1,55 +1,118 @@
 import { showImagePopup, showImagePopupImg, openPopup } from './modal.js'
-import { checkPopupEmptyInputs } from './validation.js'
+import { fetchInitialCards, deleteCard, fetchProfile, putCardLike, deleteCardLike } from './api.js'
 
 // Cards
 const placesCards = document.querySelector('.places__cards');
 const cardTemplate = document.querySelector('.card-template');
 
-const initialCards = [{
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-},
-{
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-},
-{
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-},
-{
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-},
-{
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-},
-{
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+// let initialCards = [];
+
+// получаем свой id из профиля
+fetchProfile().then(function (profileInfo) {
+    // получаем каротчки с сервера
+    fetchInitialCards().then((cards) => {  // <- вызовется по прошествии времени (после ответа сервера)
+        addCardsToPage(cards, profileInfo._id);
+    }).catch((err) => {
+        console.log(err)
+    })
+})
+
+
+
+
+// const initialCards = [{
+//     name: 'Архыз',
+//     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+// },
+// {
+//     name: 'Челябинская область',
+//     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+// },
+// {
+//     name: 'Иваново',
+//     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+// },
+// {
+//     name: 'Камчатка',
+//     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+// },
+// {
+//     name: 'Холмогорский район',
+//     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+// },
+// {
+//     name: 'Байкал',
+//     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+// }
+// ];
+
+
+function addCardsToPage(initialCards, profileId) {
+    initialCards.forEach(card => createCard(card, profileId))
 }
-];
 
-
-function addCardsToPage() {
-    initialCards.forEach(item => createCard(item.link, item.name))
-}
-
-function getCard(link, name) {
+function getCard(cardInfo, profileId) {
     // создаем копию карточки из шаблона
     const card = cardTemplate.content.querySelector('.card').cloneNode(true);
+
     // заполняем карточку
     const cardImage = card.querySelector('.card__image');
-    cardImage.src = link;
-    cardImage.alt = name;
-    card.querySelector('.card__title').textContent = name;
+    cardImage.src = cardInfo.link;
+    cardImage.alt = cardInfo.name;
+    cardImage.id = cardInfo._id;
+    // меняем текст карточки
+    card.querySelector('.card__title').textContent = cardInfo.name;
+
+    const cardLikeCounter = card.querySelector('.card__like-counter');
+
+    // обрабатываем клик по лайку
     card.querySelector('.card__like').addEventListener('click', function (event) {
-        event.target.classList.toggle('card__like_active');
+
+        const likeIcon = event.target;
+        const isLiked = likeIcon.classList.contains("card__like_active");
+      
+        // Если мы есть в списке cardInfo.likes
+        // отправить запрос на удаление лайка и убрать лайк и уменьшить счетчик
+        // console.log(isLiked)
+        if (isLiked) {
+            deleteCardLike(cardInfo._id)
+                .then(function () {
+                    likeIcon.classList.toggle('card__like_active');
+                    cardLikeCounter.textContent = parseInt(cardLikeCounter.textContent) - 1;
+                }).catch(function (error) {
+                    console.log(error)
+                })
+
+        } else {
+            // Иначе устанавливаем лай
+            putCardLike(cardInfo._id)
+                .then(function () {
+                    likeIcon.classList.toggle('card__like_active');
+                    cardLikeCounter.textContent = parseInt(cardLikeCounter.textContent) + 1;
+                }).catch(function (error) {
+                    console.log(error)
+                })
+
+        }
     });
-    card.querySelector('.card__trash').addEventListener('click', function () {
-        card.remove();
-    });
+    cardLikeCounter.textContent = cardInfo.likes.length;
+
+    // Если card принадлежит тебе, то добавляем обработчик события удаления
+    // Иначе прячем корзину
+    const trashIcon = card.querySelector('.card__trash');
+    if (cardInfo.owner._id === profileId) {
+        trashIcon.addEventListener('click', function () {
+            deleteCard(id)
+                .then(function () {
+                    card.remove()
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        });
+    } else {
+        trashIcon.remove();
+    }
 
     // добавить обработчик по клику на картинку в card
     cardImage.addEventListener('click', function () {
@@ -64,16 +127,15 @@ function getCard(link, name) {
     return card;
 }
 // Добавить карточку в список карточек в html
-function createCard(link, name) {
-    const card = getCard(link, name);   // создаем и заполняем карточку
-    placesCards.prepend(card);           // вставляем в список карточек в документ
+function createCard(card, profileId) {
+    const cardElement = getCard(card, profileId);   // создаем и заполняем карточку
+    placesCards.prepend(cardElement);           // вставляем в список карточек в документ
 
 }
 
 // в этот объект добавляем функции или переменные,
 // которые будут доступны в других частях программы
 export {
-    addCardsToPage,
     createCard
 }
 

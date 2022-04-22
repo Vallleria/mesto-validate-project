@@ -1,4 +1,3 @@
-import { addCardsToPage } from './card.js'
 import { fillProfilePopupForm, openPopup, profilePopup } from './modal.js'
 import { checkPopupEmptyInputs } from './validation.js'
 
@@ -10,6 +9,4 @@ profileEditBtn.addEventListener('click', function () {
     checkPopupEmptyInputs(profilePopup);
 });
 
-
-addCardsToPage();
 

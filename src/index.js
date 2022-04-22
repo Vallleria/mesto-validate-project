@@ -5,4 +5,5 @@ import "./scripts/modal.js";
 import "./scripts/card.js";
 import "./scripts/validation.js";
 import "./scripts/overlay.js";
+import "./scripts/profile.js";
 import "./scripts/index.js";
