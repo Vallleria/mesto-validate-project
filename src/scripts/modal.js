@@ -22,7 +22,7 @@ const profileAddBtn = document.querySelector('.profile__add-btn');
 */
 
 // AvatarPopup
-const avatarImage = document.querySelector('.profile__image');
+const avatarImageWrapper = document.querySelector('.profile__image-wrapper');
 const avatarPopup = document.querySelector('.avatar-popup');
 const avatarPopupCloseBtn = avatarPopup.querySelector('.avatar-popup__close');
 const avatarPopupForm = avatarPopup.querySelector('.avatar-popup__form');
@@ -207,7 +207,7 @@ avatarPopupCloseBtn.addEventListener('click', function () {
     closePopup(avatarPopup)
 });
 
-avatarImage.addEventListener('click', function (evt) {
+avatarImageWrapper.addEventListener('click', function (evt) {
     openPopup(avatarPopup);
     checkPopupEmptyInputs(avatarPopup);
 });

@@ -102,7 +102,7 @@ function getCard(cardInfo, profileId) {
     const trashIcon = card.querySelector('.card__trash');
     if (cardInfo.owner._id === profileId) {
         trashIcon.addEventListener('click', function () {
-            deleteCard(id)
+            deleteCard(cardInfo._id)
                 .then(function () {
                     card.remove()
                 })
@@ -117,10 +117,10 @@ function getCard(cardInfo, profileId) {
     // добавить обработчик по клику на картинку в card
     cardImage.addEventListener('click', function () {
         // вставить в image-popup ссылку и название
-        showImagePopupImg.src = link;
-        showImagePopupImg.alt = name;
+        showImagePopupImg.src = cardInfo.link;
+        showImagePopupImg.alt = cardInfo.name;
 
-        showImagePopup.querySelector('.show-image-popup__title').textContent = name;
+        showImagePopup.querySelector('.show-image-popup__title').textContent = cardInfo.name;
         // показать show-image-popup
         openPopup(showImagePopup);
     })

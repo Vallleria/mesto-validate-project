@@ -12,6 +12,7 @@
 /*PROFILE*/
 @import url(../blocks/profile/profile.css);
 @import url(../blocks/profile/__info/profile__info.css);
+@import url(../blocks/profile/__image-wrapper/profile__image-wrapper.css);
 @import url(../blocks/profile/__image/profile__image.css);
 @import url(../blocks/profile/__subtitle/profile__subtitle.css);
 @import url(../blocks/profile/__title/profile__title.css);
@@ -24,6 +25,7 @@
 @import url(../blocks/places/__cards/places__cards.css);
 @import url(../blocks/places/__title/places__title.css);
 
+
 /*CARD*/
 @import url(../blocks/card/card.css);
 @import url(../blocks/card/__image/card__image.css);
@@ -32,6 +34,7 @@
 @import url(../blocks/card/__like/_active/card__like_active.css);
 @import url(../blocks/card/__card-footer/card__card-footer.css);
 @import url(../blocks/card/__trash/card__trash.css);
+@import url(../blocks/card/__like/__like-container/card__like-container.css);
 
 /*FOOTER*/
 @import url(../blocks/footer/footer.css);
