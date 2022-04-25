@@ -15,6 +15,8 @@ const handleResponse = (response) => {
         return Promise.reject(`Статус: ${response.status} Error: ${errorData.message}`);
     });
 }
+
+
 // получить карточки
 const fetchInitialCards = () => {
     //          url                          parameters
@@ -24,6 +26,11 @@ const fetchInitialCards = () => {
 const fetchProfile = () => {
     return fetch(`${config.baseUrl}/users/me`, { headers: config.headers }).then(handleResponse)
 }
+
+const getAppInfo = () => {
+    return Promise.all([fetchProfile(), fetchInitialCards()]);
+}; 
+
 // обновить аватар
 const patchProfileAvatar = (url) => {
     return fetch(`${config.baseUrl}/users/me/avatar`, { 
@@ -95,7 +102,8 @@ export {
     postNewCard,
     deleteCard,
     putCardLike,
-    deleteCardLike
+    deleteCardLike, 
+    getAppInfo
 
 }
 

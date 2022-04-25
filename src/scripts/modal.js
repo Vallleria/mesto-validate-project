@@ -73,14 +73,15 @@ function updateProfile(evt) {
         resetPopupFormValidation(imagePopup);
         closePopup(profilePopup);
         updatePageProfile(profileData);
-        // поменять текст на кнопке обратно на Сохранить
-        // разблокировать кнопку
-        stopSaveButtonLoading(form);
     })
     .catch(function(error){
-       console.log(error)
-       stopSaveButtonLoading(form);
+       console.log(error);
     })
+    .finally(() => {
+        // не зависимо от then или catch вернуть обратно текст на кнопке Сохранить
+        // и разблокировать ее
+        stopSaveButtonLoading(form);
+    }); 
     // отправить новые данные из полей ввода на сервер
     // если все ок, обновить на странице
     // profileTitle.textContent = formInputName.value;
@@ -132,7 +133,8 @@ function addImage(evt) {
     .then(function(card){
         formInputImage.value = '';
         formInputTitle.value = '';
-        createCard(card.link, card.name, card._id);
+        
+        createCard(card, card.owner._id);
         resetPopupFormValidation(imagePopup);
         closePopup(imagePopup);
         startSaveButtonLoading(form);

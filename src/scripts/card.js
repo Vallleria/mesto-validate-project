@@ -1,22 +1,16 @@
 import { showImagePopup, showImagePopupImg, openPopup } from './modal.js'
-import { fetchInitialCards, deleteCard, fetchProfile, putCardLike, deleteCardLike } from './api.js'
+import { getAppInfo, deleteCard, putCardLike, deleteCardLike } from './api.js'
 
 // Cards
 const placesCards = document.querySelector('.places__cards');
 const cardTemplate = document.querySelector('.card-template');
 
-// let initialCards = [];
 
-// получаем свой id из профиля
-fetchProfile().then(function (profileInfo) {
-    // получаем каротчки с сервера
-    fetchInitialCards().then((cards) => {  // <- вызовется по прошествии времени (после ответа сервера)
+getAppInfo()
+    .then(([ profileInfo, cards ]) => {
         addCardsToPage(cards, profileInfo._id);
-    }).catch((err) => {
-        console.log(err)
     })
-})
-
+    .catch(err => console.log(`Ошибка загрузки данных: ${err}`)) 
 
 
 
@@ -60,14 +54,23 @@ function getCard(cardInfo, profileId) {
     cardImage.src = cardInfo.link;
     cardImage.alt = cardInfo.name;
     cardImage.id = cardInfo._id;
+
     // меняем текст карточки
     card.querySelector('.card__title').textContent = cardInfo.name;
 
     const cardLikeCounter = card.querySelector('.card__like-counter');
+    const cardLike = card.querySelector('.card__like');
+
+    const isMeLiked = cardInfo.likes.some(function(owner) {
+        return owner._id === profileId;
+    });
+
+    if (isMeLiked) {
+        cardLike.classList.add('card__like_active');
+    }
 
     // обрабатываем клик по лайку
-    card.querySelector('.card__like').addEventListener('click', function (event) {
-
+    cardLike.addEventListener('click', function (event) {
         const likeIcon = event.target;
         const isLiked = likeIcon.classList.contains("card__like_active");
       
