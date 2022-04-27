@@ -31,9 +31,9 @@ const updatePageProfile = (profile) =>{
   profileSubtitle.textContent = profile.about;
 }
 
-fetchProfile().then(updatePageProfile).catch((err) => {
-  console.log(err)
-});
+// fetchProfile().then(updatePageProfile).catch((err) => {
+//   console.log(err)
+// });
 
 
 export {

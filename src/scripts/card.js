@@ -6,11 +6,11 @@ const placesCards = document.querySelector('.places__cards');
 const cardTemplate = document.querySelector('.card-template');
 
 
-getAppInfo()
-    .then(([ profileInfo, cards ]) => {
-        addCardsToPage(cards, profileInfo._id);
-    })
-    .catch(err => console.log(`Ошибка загрузки данных: ${err}`)) 
+// getAppInfo()
+//     .then(([ profileInfo, cards ]) => {
+//         addCardsToPage(cards, profileInfo._id);
+//     })
+//     .catch(err => console.log(`Ошибка загрузки данных: ${err}`)) 
 
 
 
@@ -139,7 +139,9 @@ function createCard(card, profileId) {
 // в этот объект добавляем функции или переменные,
 // которые будут доступны в других частях программы
 export {
-    createCard
+    createCard,
+    addCardsToPage
+
 }
 
 // })();

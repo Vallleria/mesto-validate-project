@@ -5,22 +5,29 @@
 */
 
 
-const popupForms = document.querySelectorAll('.form');
+const validationConfig = {
+    formSelector: '.form',
+    formInputSelector: '.form__input',
+    buttonTypePrimarySelector: '.button_type_primary',
+    formInputTypeError: 'form__input_type_error',
+    formInputErrorActive: 'form__input-error_active'
+}
 
 
-const checkValidInputs = function(formElement) {
-    const inputs = formElement.querySelectorAll('.form__input');
+const checkValidInputs = function(formElement, config) {
+
+    const inputs = formElement.querySelectorAll(config.formInputSelector);
 
     inputs.forEach(function (inputElement) {
         inputElement.addEventListener('input', function () {
-            checkEmptyInputs(formElement)
+            checkEmptyInputs(formElement, true, config)
         });
     })
 }
 
-const checkEmptyInputs = function(formElement, showErrors=true) {
-    const inputs = formElement.querySelectorAll('.form__input');
-    const btnSave = formElement.querySelector('.button_type_primary');
+const checkEmptyInputs = function(formElement, showErrors, config) {
+    const inputs = formElement.querySelectorAll(config.formInputSelector);
+    const btnSave = formElement.querySelector(config.buttonTypePrimarySelector);
 
     const invalidInputs = Array.from(inputs).filter(function(input) {
         return !input.validity.valid
@@ -31,14 +38,14 @@ const checkEmptyInputs = function(formElement, showErrors=true) {
 
     validInputs.forEach(function (input) {
         const errorSpan = formElement.querySelector(`.${input.id}-error`);
-        hideInputError(input, errorSpan);
+        hideInputError(input, errorSpan, config);
     });
 
     if (invalidInputs.length > 0) {
         if (showErrors) {
             invalidInputs.forEach(function (input) {
                 const errorSpan = formElement.querySelector(`.${input.id}-error`);
-                showInputError(input, errorSpan);
+                showInputError(input, errorSpan, config);
             });
         }
         btnSave.setAttribute('disabled', '');
@@ -47,30 +54,30 @@ const checkEmptyInputs = function(formElement, showErrors=true) {
     }
 }
 
-function checkPopupEmptyInputs(popup) {
-    const form = popup.querySelector('.form');
-    checkEmptyInputs(form, false);
+function checkPopupEmptyInputs(popup, config) {
+    const form = popup.querySelector(config.formSelector);
+    checkEmptyInputs(form, false, config);
 }
 
-const resetPopupFormValidation = function (popup) {
-    const formElement = popup.querySelector('.form');
-    const inputs = formElement.querySelectorAll('.form__input');
+const resetPopupFormValidation = function (popup, config) {
+    const formElement = popup.querySelector(config.formSelector);
+    const inputs = formElement.querySelectorAll(config.formInputSelector);
     inputs.forEach(function(input) {
         const errorSpan = formElement.querySelector(`.${input.id}-error`);
-        hideInputError(input, errorSpan);
+        hideInputError(input, errorSpan, config);
     });
 }
 
 //                                 поле ввода     спан
-const showInputError = function (inputElement, errorElement) {
-    inputElement.classList.add('form__input_type_error');
-    errorElement.classList.add('form__input-error_active');
+const showInputError = function (inputElement, errorElement, config) {
+    inputElement.classList.add(config.formInputTypeError);
+    errorElement.classList.add(config.formInputErrorActive);
     errorElement.textContent = inputElement.validationMessage;
 }
 
-const hideInputError = function (inputElement, errorElement) {
-    inputElement.classList.remove('form__input_type_error');
-    errorElement.classList.remove('form__input-error_active');
+const hideInputError = function (inputElement, errorElement, config) {
+    inputElement.classList.remove(config.formInputTypeError);
+    errorElement.classList.remove(config.formInputErrorActive);
 }
 
 // const isValid = function (formInput, btnSave, formError) {
@@ -87,16 +94,36 @@ const hideInputError = function (inputElement, errorElement) {
 //     }
 // }
 
-Array.from(popupForms).forEach(function (formElement) {
-    formElement.addEventListener('submit', function (event) {
-        event.preventDefault();                                 // отменить отправку данных
-    });
 
-    checkValidInputs(formElement);
-})
+
+
+  
+const enableValidation = (config) => {
+      
+      const popupForms = document.querySelectorAll(config.formSelector);
+      const getFormList = Array.from(popupForms);
+      getFormList.forEach(function (formElement) {
+          formElement.addEventListener('submit', (evt) => {
+              evt.preventDefault();
+          });
+          checkValidInputs(formElement, config);
+      })
+};
+
+
+
+// Array.from(popupForms).forEach(function (formElement) {
+//     formElement.addEventListener('submit', function (event) {
+//         event.preventDefault();                                 // отменить отправку данных
+//     });
+
+//     checkValidInputs(formElement);
+// })
 
 export {
     checkEmptyInputs,
     checkPopupEmptyInputs,
-    resetPopupFormValidation
+    resetPopupFormValidation,
+    enableValidation,
+    validationConfig
 }

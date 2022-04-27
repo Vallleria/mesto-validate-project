@@ -1,5 +1,5 @@
 import { createCard } from './card.js'
-import { resetPopupFormValidation, checkPopupEmptyInputs } from './validation.js'
+import { resetPopupFormValidation, checkPopupEmptyInputs, validationConfig } from './validation.js'
 import { patchProfileAvatar, patchProfileInfo, postNewCard } from './api.js'
 import { updatePageProfile } from './profile.js'
 
@@ -70,7 +70,7 @@ function updateProfile(evt) {
     startSaveButtonLoading(form);
     patchProfileInfo(formInputName.value, formInputProfession.value)
     .then(function(profileData){
-        resetPopupFormValidation(imagePopup);
+        resetPopupFormValidation(imagePopup, validationConfig);
         closePopup(profilePopup);
         updatePageProfile(profileData);
     })
@@ -135,7 +135,7 @@ function addImage(evt) {
         formInputTitle.value = '';
         
         createCard(card, card.owner._id);
-        resetPopupFormValidation(imagePopup);
+        resetPopupFormValidation(imagePopup, validationConfig);
         closePopup(imagePopup);
         startSaveButtonLoading(form);
     }) .catch(function(error){
@@ -159,7 +159,7 @@ function addImage(evt) {
 
 
 profilePopupCloseBtn.addEventListener('click', function () {
-    resetPopupFormValidation(profilePopup);
+    resetPopupFormValidation(profilePopup, validationConfig);
     closePopup(profilePopup);
 });
 
@@ -167,11 +167,11 @@ profilePopupForm.addEventListener('submit', updateProfile);
 
 profileAddBtn.addEventListener('click', function (evt) {
     openPopup(imagePopup);
-    checkPopupEmptyInputs(imagePopup);
+    checkPopupEmptyInputs(imagePopup, validationConfig);
 });
 
 imagePopupCloseBtn.addEventListener('click', function () {
-    resetPopupFormValidation(imagePopup);
+    resetPopupFormValidation(imagePopup, validationConfig);
     closePopup(imagePopup)
 });
 
@@ -191,7 +191,7 @@ function updateAvatar(evt){
     // отправить данные и если все ок, то очистка и закрываем окно
     patchProfileAvatar(avatarInputUrl.value)
     .then(function(profileData){
-        resetPopupFormValidation(avatarPopup);
+        resetPopupFormValidation(avatarPopup, validationConfig);
         closePopup(avatarPopup);
         updatePageProfile (profileData)
         stopSaveButtonLoading(form);
@@ -205,13 +205,13 @@ function updateAvatar(evt){
 avatarPopupForm.addEventListener('submit', updateAvatar);
 
 avatarPopupCloseBtn.addEventListener('click', function () {
-    resetPopupFormValidation(avatarPopup);
+    resetPopupFormValidation(avatarPopup, validationConfig);
     closePopup(avatarPopup)
 });
 
 avatarImageWrapper.addEventListener('click', function (evt) {
     openPopup(avatarPopup);
-    checkPopupEmptyInputs(avatarPopup);
+    checkPopupEmptyInputs(avatarPopup, validationConfig);
 });
 
 
